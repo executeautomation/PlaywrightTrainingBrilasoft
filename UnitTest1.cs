@@ -11,7 +11,6 @@ namespace PlaywrightTestDemo
 
         private ITestOutputHelper _testOutputHelper;
         private UIElementUtilities _uiElementUtilities;
-
         public UnitTest1(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
@@ -63,7 +62,6 @@ namespace PlaywrightTestDemo
             await CreateUser(page, userData);
         }
 
-
         private async Task CreateUser(IPage page, UserData userData)
         {
 
@@ -106,10 +104,6 @@ namespace PlaywrightTestDemo
 
             await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
         }
-
-
-
-
 
 
         [Theory, AutoData]
@@ -174,14 +168,11 @@ namespace PlaywrightTestDemo
         public static IEnumerable<object[]> TestData()
         {
             yield return new object[] { new UserData("First Data", "2000", 8, "3", "firstdata@gmail.com") };
-            ////yield return new object[] { new UserData("Second Data", "3000", 9, "2", "seconddata@gmail.com") };
-            ////yield return new object[] { new UserData("Third Data", "4000", 10, "1", "thirddata@gmail.com") };
-            ////yield return new object[] { new UserData("Fourth Data", "5000", 11, "4", "forthdata@gmail.com") };
+            yield return new object[] { new UserData("Second Data", "3000", 9, "2", "seconddata@gmail.com") };
+            yield return new object[] { new UserData("Third Data", "4000", 10, "1", "thirddata@gmail.com") };
+            yield return new object[] { new UserData("Fourth Data", "5000", 11, "4", "forthdata@gmail.com") };
         }
     }
-
-
-
 
 
     public record UserData(string Name, string Salary, int DurationWorked, string Grade, string Email);
