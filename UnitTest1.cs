@@ -83,7 +83,7 @@ namespace PlaywrightTestDemo
 
             await page.GetByRole(AriaRole.Spinbutton, new() { Name = "DurationWorked" }).FillAsync(userData.DurationWorked.ToString());
 
-            await page.GetByRole(AriaRole.Combobox, new() { Name = "Grade" }).SelectOptionAsync(new SelectOptionValue { Index = 3 });
+            await _uiElementUtilities.SelectDropDownWithValueAsync(page.GetByRole(AriaRole.Combobox, new() { Name = "Grade" }), "Middle");
 
             await page.GetByLabel("Email").FillAsync(userData.Email);
 

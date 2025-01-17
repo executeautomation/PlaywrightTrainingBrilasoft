@@ -31,5 +31,17 @@ namespace PlaywrightTestDemo.Utilities
             _testOutputHelper.WriteLine($"Clicked on the element");
         }
 
+        public async Task SelectDropDownWithIndexAsync(ILocator locator, int index)
+        {
+            _testOutputHelper.WriteLine($"Selecting the value via Index: {index}");
+            await locator.SelectOptionAsync(new SelectOptionValue { Index = index });
+        }
+
+        public async Task SelectDropDownWithValueAsync(ILocator locator, string value)
+        {
+            _testOutputHelper.WriteLine($"Selecting the value via Value: {value}");
+            await locator.SelectOptionAsync(value);
+        }
+
     }
 }
