@@ -92,6 +92,10 @@ namespace PlaywrightTestDemo
 
         private async Task PerformLogin(IPage page)
         {
+
+            //Read the JSON file
+            DDTJsonHelper.ReadJsonFile();
+
             //Explicit wait
             await page.WaitForSelectorAsync("text=Login");
 
