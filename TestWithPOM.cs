@@ -1,20 +1,23 @@
 using AutoFixture.Xunit2;
 using Microsoft.Playwright;
+using PlaywrightTestDemo.Pages;
 using PlaywrightTestDemo.Utilities;
 using Xunit.Abstractions;
 
 
 namespace PlaywrightTestDemo
 {
-    public class UnitTest1
+    public class TestWithPOM
     {
 
         private ITestOutputHelper _testOutputHelper;
         private UIElementUtilities _uiElementUtilities;
-        public UnitTest1(ITestOutputHelper testOutputHelper)
+        private PlaywrightDriver _driver;
+        public TestWithPOM(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
             _uiElementUtilities = new UIElementUtilities(testOutputHelper);
+            _driver = new PlaywrightDriver();
         }
 
 
@@ -27,22 +30,10 @@ namespace PlaywrightTestDemo
         public async void LoginTest(string userName, string password, string message)
         {
 
-            var page = await LaunchBrowserAsync();
+            var page = await _driver.LaunchBrowserAsync();
 
-            //Explicit wait
-            await page.WaitForSelectorAsync("text=Login");
-
-            // Step 3: Click login link
-            await _uiElementUtilities.ClickAsync(page.Locator("text=Login"));
-
-            await page.WaitForURLAsync("**/Login");
-
-            // Step 4: Enter username and password (data)
-            await page.FillAsync("input[name=UserName]", userName);
-            await page.FillAsync("input[name=Password]", password);
-
-            // Step 5: Click login button
-            await page.ClickAsync("input[type=submit]");
+            LoginPage loginPage = new LoginPage(page);
+            await loginPage.PerformLoginAsync();
 
             if (message != string.Empty)
                 Assert.True(await page.IsVisibleAsync($"text={message}"));
@@ -53,10 +44,11 @@ namespace PlaywrightTestDemo
         public async Task WorkingWithLocator(UserData userData)
         {
             //1. Launch the browser
-            var page = await LaunchBrowserAsync();
+            var page = await _driver.LaunchBrowserAsync();
 
             //2. Perform Login
-            await PerformLogin(page);
+            LoginPage loginPage = new LoginPage(page);
+            await loginPage.PerformLoginAsync();
 
             //3. Create User
             await CreateUser(page, userData);
@@ -90,42 +82,15 @@ namespace PlaywrightTestDemo
             await page.GetByRole(AriaRole.Button, new() { Name = "Create" }).ClickAsync();
         }
 
-        private async Task PerformLogin(IPage page)
-        {
-
-            //Read the JSON file
-            var data = DDTJsonHelper.ReadJsonFile();
-
-            //Explicit wait
-            await page.WaitForSelectorAsync("text=Login");
-
-            // Step 3: Click login link
-            await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
-
-            //await _uiElementUtilities.ClearAndFillAsync(page.GetByRole(AriaRole.Textbox, new() { Name = "UserName" }), data.UserName);
-
-            //await page.FillAsync("//input[@id='Password']", data.Password);
-
-            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        }
-
-
         [Theory, AutoData]
         public async Task WorkingWithLocatorWithAutoData(UserData userData)
         {
-            var page = await LaunchBrowserAsync();
 
-            //Explicit wait
-            await page.WaitForSelectorAsync("text=Login");
+            var page = await _driver.LaunchBrowserAsync();
 
-            // Step 3: Click login link
-            await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
+            LoginPage loginPage = new LoginPage(page);
+            await loginPage.PerformLoginAsync();
 
-            await page.GetByRole(AriaRole.Textbox, new() { Name = "UserName" }).FillAsync("admin");
-
-            await page.FillAsync("//input[@id='Password']", "password");
-
-            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
 
             //Employee List
             await page.GetByRole(AriaRole.Link, new() { Name = "Employee List" }).ClickAsync();
@@ -148,25 +113,6 @@ namespace PlaywrightTestDemo
         }
 
 
-        private async Task<IPage> LaunchBrowserAsync()
-        {
-            // Step 1: Launch the browser
-            var playwright = await Playwright.CreateAsync();
-
-            var browserLaunchOption = new BrowserTypeLaunchOptions
-            {
-                Headless = false,
-                SlowMo = 50
-            };
-
-            var browser = await playwright.Chromium.LaunchAsync(browserLaunchOption);
-            var page = await browser.NewPageAsync();
-
-            // Step 2: Navigate the URL
-            await page.GotoAsync("http://eaapp.somee.com/");
-
-            return page;
-        }
 
         //Data Driven Testing datasource
         public static IEnumerable<object[]> TestData()
@@ -177,4 +123,7 @@ namespace PlaywrightTestDemo
             yield return new object[] { new UserData("Fourth Data", "5000", 11, "4", "forthdata@gmail.com") };
         }
     }
+
+
+    public record UserData(string Name, string Salary, int DurationWorked, string Grade, string Email);
 }

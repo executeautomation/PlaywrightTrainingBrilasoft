@@ -10,19 +10,18 @@ namespace PlaywrightTestDemo.Utilities
     internal class DDTJsonHelper
     {
        
-
-        public static void ReadJsonFile()
+        public static LoginDetail ReadJsonFile()
         {
             //1. Read the JSON file
             //Get the JSON file from bin directory
-            var jsonFilePath = @"E:\source\PlaywrightTrainingBrilasoft\bin\Debug\net8.0\Data\LoginData.json";
+            var jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "LoginData.json");
 
             try
             {
                 string jsonData = File.ReadAllText(jsonFilePath);
 
                 //2. Deserialize the JSON file to a Type
-                var loginData = JsonSerializer.Deserialize<LoginDetail>(jsonData);
+                return JsonSerializer.Deserialize<LoginDetail>(jsonData);
 
             }
             catch (Exception ex)
@@ -30,7 +29,7 @@ namespace PlaywrightTestDemo.Utilities
                 Console.WriteLine(ex.ToString());
             }
 
-
+            return null;
 
      
         }
