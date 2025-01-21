@@ -1,45 +1,30 @@
 ﻿using Microsoft.Playwright;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Abstractions;
 
 namespace PlaywrightTestDemo.Utilities
 {
-    public class UIElementUtilities
+    //1. Make the class static 
+    //2. Make the methods as static
+    //3. Add a "this" keyword to the first parameter of the method
+    public static class UIElementUtilities
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        public UIElementUtilities(ITestOutputHelper testOutputHelper)
+        public static async Task ClearAndFillAsync(this ILocator locator, string inputText)
         {
-            _testOutputHelper = testOutputHelper;
-        }
-        public async Task ClearAndFillAsync(ILocator locator, string inputText)
-        {
-            _testOutputHelper.WriteLine($"Clearing the text");
             await locator.ClearAsync();
             await locator.FillAsync(inputText);
-            _testOutputHelper.WriteLine($"Filled the text: {inputText}");
         }
 
-        public async Task ClickAsync(ILocator locator)
+        public static async Task ClickAsync(this ILocator locator)
         {
-            _testOutputHelper.WriteLine($"Clicking on the element");
             await locator.ClickAsync();
-            _testOutputHelper.WriteLine($"Clicked on the element");
         }
 
-        public async Task SelectDropDownWithIndexAsync(ILocator locator, int index)
+        public static async Task SelectDropDownWithIndexAsync(ILocator locator, int index)
         {
-            _testOutputHelper.WriteLine($"Selecting the value via Index: {index}");
             await locator.SelectOptionAsync(new SelectOptionValue { Index = index });
         }
 
-        public async Task SelectDropDownWithValueAsync(ILocator locator, string value)
+        public static async Task SelectDropDownWithValueAsync(ILocator locator, string value)
         {
-            _testOutputHelper.WriteLine($"Selecting the value via Value: {value}");
             await locator.SelectOptionAsync(value);
         }
 

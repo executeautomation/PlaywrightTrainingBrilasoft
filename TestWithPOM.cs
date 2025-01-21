@@ -11,12 +11,10 @@ namespace PlaywrightTestDemo
     {
 
         private ITestOutputHelper _testOutputHelper;
-        private UIElementUtilities _uiElementUtilities;
         private PlaywrightDriver _driver;
         public TestWithPOM(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
-            _uiElementUtilities = new UIElementUtilities(testOutputHelper);
             _driver = new PlaywrightDriver();
         }
 

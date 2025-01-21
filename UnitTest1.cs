@@ -10,11 +10,9 @@ namespace PlaywrightTestDemo
     {
 
         private ITestOutputHelper _testOutputHelper;
-        private UIElementUtilities _uiElementUtilities;
         public UnitTest1(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
-            _uiElementUtilities = new UIElementUtilities(testOutputHelper);
         }
 
 
@@ -33,7 +31,7 @@ namespace PlaywrightTestDemo
             await page.WaitForSelectorAsync("text=Login");
 
             // Step 3: Click login link
-            await _uiElementUtilities.ClickAsync(page.Locator("text=Login"));
+            await page.Locator("text=Login").ClickAsync();
 
             await page.WaitForURLAsync("**/Login");
 
@@ -77,7 +75,7 @@ namespace PlaywrightTestDemo
             //Create New
             await page.GetByRole(AriaRole.Link, new() { Name = "Create New" }).ClickAsync();
 
-            await _uiElementUtilities.ClearAndFillAsync(page.GetByLabel("Name"), userData.Name);
+            await page.GetByLabel("Name").ClearAndFillAsync(userData.Name);
 
             await page.GetByLabel("Salary").Nth(0).FillAsync(userData.Salary);
 

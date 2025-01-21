@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using PlaywrightTestDemo.Utilities;
 
 namespace PlaywrightTestDemo.Pages
 {
@@ -21,15 +22,16 @@ namespace PlaywrightTestDemo.Pages
         //Action methods
         public async Task CreateUserAysnc(UserData userData)
         {
-            await _name.FillAsync(userData.Name);
 
-            await _salary.FillAsync(userData.Salary);
+            await _name.ClearAndFillAsync(userData.Name);
 
-            await _duration.FillAsync(userData.DurationWorked.ToString());
+            await _salary.ClearAndFillAsync(userData.Salary);
+
+            await _duration.ClearAndFillAsync(userData.DurationWorked.ToString());
 
             await _grade.SelectOptionAsync("Middle");
 
-            await _mail.FillAsync(userData.Email);
+            await _mail.ClearAndFillAsync(userData.Email);
 
             await _create.ClickAsync();
         }
