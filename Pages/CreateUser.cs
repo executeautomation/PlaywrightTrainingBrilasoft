@@ -27,7 +27,7 @@ namespace PlaywrightTestDemo.Pages
 
             await _duration.FillAsync(userData.DurationWorked.ToString());
 
-            await _grade.FillAsync("Middle");
+            await _grade.SelectOptionAsync("Middle");
 
             await _mail.FillAsync(userData.Email);
 

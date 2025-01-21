@@ -22,7 +22,7 @@ namespace PlaywrightTestDemo.Pages
             //Read the JSON file
             var data = DDTJsonHelper.ReadJsonFile();
 
-            await _userName.FillAsync(data.Password);
+            await _userName.FillAsync(data.UserName);
 
             await _password.FillAsync(data.Password);
 
