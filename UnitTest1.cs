@@ -24,7 +24,6 @@ namespace PlaywrightTestDemo
         [InlineData("", "password", "The UserName field is required.")]
         public async void LoginTest(string userName, string password, string message)
         {
-
             var page = await LaunchBrowserAsync();
 
             //Explicit wait
@@ -81,7 +80,7 @@ namespace PlaywrightTestDemo
 
             await page.GetByRole(AriaRole.Spinbutton, new() { Name = "DurationWorked" }).FillAsync(userData.DurationWorked.ToString());
 
-            await _uiElementUtilities.SelectDropDownWithValueAsync(page.GetByRole(AriaRole.Combobox, new() { Name = "Grade" }), "Middle");
+            await page.GetByRole(AriaRole.Combobox, new() { Name = "Grade" }).SelectDropDownWithValueAsync(userData.Grade);
 
             await page.GetByLabel("Email").FillAsync(userData.Email);
 

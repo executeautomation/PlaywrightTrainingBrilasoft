@@ -29,7 +29,7 @@ namespace PlaywrightTestDemo.Pages
 
             await _duration.ClearAndFillAsync(userData.DurationWorked.ToString());
 
-            await _grade.SelectOptionAsync("Middle");
+            await _grade.SelectDropDownWithValueAsync(userData.Grade);
 
             await _mail.ClearAndFillAsync(userData.Email);
 

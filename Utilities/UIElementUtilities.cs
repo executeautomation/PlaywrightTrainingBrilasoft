@@ -18,12 +18,12 @@ namespace PlaywrightTestDemo.Utilities
             await locator.ClickAsync();
         }
 
-        public static async Task SelectDropDownWithIndexAsync(ILocator locator, int index)
+        public static async Task SelectDropDownWithIndexAsync(this ILocator locator, int index)
         {
             await locator.SelectOptionAsync(new SelectOptionValue { Index = index });
         }
 
-        public static async Task SelectDropDownWithValueAsync(ILocator locator, string value)
+        public static async Task SelectDropDownWithValueAsync(this ILocator locator, string value)
         {
             await locator.SelectOptionAsync(value);
         }
