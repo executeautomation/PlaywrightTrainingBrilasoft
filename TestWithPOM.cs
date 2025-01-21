@@ -46,70 +46,35 @@ namespace PlaywrightTestDemo
             //1. Launch the browser
             var page = await _driver.LaunchBrowserAsync();
 
+            //HomePage
+            HomePage homePage = new HomePage(page);
+            var loginPage = await homePage.ClickLoginLinkAsync();
+
             //2. Perform Login
-            LoginPage loginPage = new LoginPage(page);
             await loginPage.PerformLoginAsync();
 
-            //3. Create User
-            await CreateUser(page, userData);
-        }
+            //3. Employee List
+            var employeeListPage = await homePage.ClickEmployeeListLinkAsync();
+            
+            //4. Click Create new button
+            var createUser = await employeeListPage.ClickCreateNewAsync();
 
-        private async Task CreateUser(IPage page, UserData userData)
-        {
-
-            _testOutputHelper.WriteLine($"Creating user with Name: {userData.Name}");
-            _testOutputHelper.WriteLine($"Creating user with Salary: {userData.Salary}");
-            _testOutputHelper.WriteLine($"Creating user with DurationWorked: {userData.DurationWorked}");
-            _testOutputHelper.WriteLine($"Creating user with Grade: {userData.Grade}");
-            _testOutputHelper.WriteLine($"Creating user with Email: {userData.Email}");
-
-            //Employee List
-            await page.GetByRole(AriaRole.Link, new() { Name = "Employee List" }).ClickAsync();
-
-            //Create New
-            await page.GetByRole(AriaRole.Link, new() { Name = "Create New" }).ClickAsync();
-
-            await _uiElementUtilities.ClearAndFillAsync(page.GetByLabel("Name"), userData.Name);
-
-            await page.GetByLabel("Salary").Nth(0).FillAsync(userData.Salary);
-
-            await page.GetByRole(AriaRole.Spinbutton, new() { Name = "DurationWorked" }).FillAsync(userData.DurationWorked.ToString());
-
-            await _uiElementUtilities.SelectDropDownWithValueAsync(page.GetByRole(AriaRole.Combobox, new() { Name = "Grade" }), "Middle");
-
-            await page.GetByLabel("Email").FillAsync(userData.Email);
-
-            await page.GetByRole(AriaRole.Button, new() { Name = "Create" }).ClickAsync();
+            await createUser.CreateUserAysnc(userData);
         }
 
         [Theory, AutoData]
         public async Task WorkingWithLocatorWithAutoData(UserData userData)
         {
-
             var page = await _driver.LaunchBrowserAsync();
 
             LoginPage loginPage = new LoginPage(page);
             await loginPage.PerformLoginAsync();
 
-
             //Employee List
             await page.GetByRole(AriaRole.Link, new() { Name = "Employee List" }).ClickAsync();
 
-            //Create New
-            await page.GetByRole(AriaRole.Link, new() { Name = "Create New" }).ClickAsync();
-
-            await page.GetByLabel("Name").FillAsync(userData.Name);
-
-            await page.GetByLabel("Salary").Nth(0).FillAsync(userData.Salary);
-
-            await page.GetByRole(AriaRole.Spinbutton, new() { Name = "DurationWorked" }).FillAsync(userData.DurationWorked.ToString());
-
-            await page.GetByRole(AriaRole.Combobox, new() { Name = "Grade" }).SelectOptionAsync(new SelectOptionValue { Index = 3 });
-
-            await page.GetByLabel("Email").FillAsync(userData.Email);
-
-            await page.GetByRole(AriaRole.Button, new() { Name = "Create" }).ClickAsync();
-
+            CreateUser createUser = new CreateUser(page);
+            await createUser.CreateUserAysnc(userData);
         }
 
 
