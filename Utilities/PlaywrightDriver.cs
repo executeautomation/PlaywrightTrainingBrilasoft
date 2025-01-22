@@ -1,18 +1,16 @@
 ﻿using Microsoft.Playwright;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PlaywrightTestDemo.Utilities
 {
-    public class PlaywrightDriver
+    public class PlaywrightDriver : IDisposable
     {
+
+        private IPlaywright _playwright;
+
         public async Task<IPage> LaunchBrowserAsync()
         {
             // Step 1: Launch the browser
-            var playwright = await Playwright.CreateAsync();
+            _playwright = await Playwright.CreateAsync();
 
             var browserLaunchOption = new BrowserTypeLaunchOptions
             {
@@ -20,7 +18,7 @@ namespace PlaywrightTestDemo.Utilities
                 SlowMo = 50
             };
 
-            var browser = await playwright.Chromium.LaunchAsync(browserLaunchOption);
+            var browser = await _playwright.Chromium.LaunchAsync(browserLaunchOption);
             var page = await browser.NewPageAsync();
 
             // Step 2: Navigate the URL
@@ -30,6 +28,10 @@ namespace PlaywrightTestDemo.Utilities
         }
 
 
-
+        //Automatically called 
+        public void Dispose()
+        {
+            _playwright.Dispose();
+        }
     }
 }

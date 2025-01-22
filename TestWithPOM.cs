@@ -7,15 +7,15 @@ using Xunit.Abstractions;
 
 namespace PlaywrightTestDemo
 {
-    public class TestWithPOM
+    public class TestWithPOM : IClassFixture<PlaywrightDriver>
     {
 
-        private ITestOutputHelper _testOutputHelper;
-        private PlaywrightDriver _driver;
-        public TestWithPOM(ITestOutputHelper testOutputHelper)
+        private readonly PlaywrightDriver _driver;
+        private IPage page;
+        public TestWithPOM(PlaywrightDriver driver)
         {
-            _testOutputHelper = testOutputHelper;
-            _driver = new PlaywrightDriver();
+            _driver = driver;
+            page = _driver.LaunchBrowserAsync().Result;
         }
 
 
@@ -27,9 +27,6 @@ namespace PlaywrightTestDemo
         [InlineData("", "password", "The UserName field is required.")]
         public async void LoginTest(string userName, string password, string message)
         {
-
-            var page = await _driver.LaunchBrowserAsync();
-
             LoginPage loginPage = new LoginPage(page);
             await loginPage.PerformLoginAsync();
 
@@ -41,9 +38,6 @@ namespace PlaywrightTestDemo
         [MemberData(nameof(TestData))]
         public async Task WorkingWithLocator(UserData userData)
         {
-            //1. Launch the browser
-            var page = await _driver.LaunchBrowserAsync();
-
             //HomePage
             HomePage homePage = new HomePage(page);
             var loginPage = await homePage.ClickLoginLinkAsync();
@@ -58,13 +52,12 @@ namespace PlaywrightTestDemo
             var createUser = await employeeListPage.ClickCreateNewAsync();
 
             await createUser.CreateUserAysnc(userData);
+
         }
 
         [Theory, AutoData]
         public async Task WorkingWithLocatorWithAutoData(UserData userData)
         {
-            var page = await _driver.LaunchBrowserAsync();
-
             LoginPage loginPage = new LoginPage(page);
             await loginPage.PerformLoginAsync();
 
@@ -73,6 +66,7 @@ namespace PlaywrightTestDemo
 
             CreateUser createUser = new CreateUser(page);
             await createUser.CreateUserAysnc(userData);
+
         }
 
 
