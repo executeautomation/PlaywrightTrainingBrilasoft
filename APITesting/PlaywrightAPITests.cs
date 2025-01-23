@@ -109,7 +109,7 @@ namespace PlaywrightTestDemo.APITesting
             var apiRequest = await playwright.APIRequest.NewContextAsync(apiRequestContext);
 
 
-            var body = new Product(null,"DemoProductForDuplication", "Demo Description", 123, 3);
+            var body = new Product(null, "DemoProductForDuplication", "Demo Description", 123, 3);
 
 
             //3. Perform POST Request
@@ -155,11 +155,11 @@ namespace PlaywrightTestDemo.APITesting
 
             var body = new List<Product>()
             {
-                new Product(12, "DemoProduct2", "Demo Description2", 456, 3),
-                new Product(13, "DemoProduct3", "Demo Description3", 654, 2),
-                new Product(14, "DemoProduct4", "Demo Description4", 789, 1),
+                new Product(0, "DemoProduct2", "Demo Description2", 456, 3),
+                new Product(0, "DemoProduct3", "Demo Description3", 654, 2),
+                new Product(0, "DemoProduct4", "Demo Description4", 789, 1),
             };
-                
+
             //3. Perform POST Request
             var response = await apiRequest.PostAsync("/Product/CreateProducts", new() { DataObject = body });
 
@@ -172,14 +172,17 @@ namespace PlaywrightTestDemo.APITesting
             });
 
             //Fluent Assertions
-
             using (new AssertionScope())
             {
                 response.Should().NotBeNull();
                 response.Status.Should().Be(200);
                 response.StatusText.Should().Be("OK");
 
-               products.Should().NotBeNull();
+                products
+                    .Should()
+                    .BeEquivalentTo(body, x => x.Excluding(y => y.Id));
+
+                products.Should().NotBeNull();
             }
         }
     }
