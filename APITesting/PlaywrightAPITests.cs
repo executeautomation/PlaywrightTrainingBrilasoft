@@ -1,22 +1,30 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
-using Microsoft.Playwright;
 using PlaywrightTestDemo.Utilities;
 using System.Text.Json;
 
 namespace PlaywrightTestDemo.APITesting
 {
-    public class PlaywrightAPITests
+    public class PlaywrightAPITests : 
+        IClassFixture<PlaywrightAPIDriver>, 
+        IClassFixture<ProductDbContext>
     {
+        private readonly PlaywrightAPIDriver _playwrightAPIDriver;
+        private readonly ProductDbContext _productDbContext;
+
+        public PlaywrightAPITests(
+            PlaywrightAPIDriver playwrightAPIDriver,
+            ProductDbContext productDbContext)
+        {
+            _playwrightAPIDriver = playwrightAPIDriver;
+            _productDbContext = productDbContext;
+        }
 
         [Fact]
         public async Task PerformGetProductByIdTestAsync()
         {
 
-            PlaywrightAPIDriver driver = new PlaywrightAPIDriver();
-
-            //3. Perform Get Request
-            var response = await driver.APIRequestContext.GetAsync("/Product/GetProductById/1");
+            var response = await _playwrightAPIDriver.APIRequestContext.GetAsync("/Product/GetProductById/1");
 
             //4. Convert the response to JSON
             var jsonResponse = await response.JsonAsync();
@@ -43,20 +51,8 @@ namespace PlaywrightTestDemo.APITesting
         [Fact]
         public async Task PerformGetProductsTestAsync()
         {
-            //1. First Create an instance of Playwright
-            var playwright = await Playwright.CreateAsync();
-
-            //2. Create instance of API Request
-            var apiRequestContext = new APIRequestNewContextOptions
-            {
-                BaseURL = "http://localhost:8001/"
-            };
-
-            var apiRequest = await playwright.APIRequest.NewContextAsync(apiRequestContext);
-
-
             //3. Perform Get Request
-            var response = await apiRequest.GetAsync("/Product/GetProducts");
+            var response = await _playwrightAPIDriver.APIRequestContext.GetAsync("/Product/GetProducts");
 
             //4. Convert the response to JSON
             var jsonResponse = await response.JsonAsync();
@@ -87,23 +83,11 @@ namespace PlaywrightTestDemo.APITesting
         [Fact]
         public async Task PerformPostProductTestAsync()
         {
-            //1. First Create an instance of Playwright
-            var playwright = await Playwright.CreateAsync();
-
-            //2. Create instance of API Request
-            var apiRequestContext = new APIRequestNewContextOptions
-            {
-                BaseURL = "http://localhost:8001/"
-            };
-
-            var apiRequest = await playwright.APIRequest.NewContextAsync(apiRequestContext);
-
-
-            var body = new Product(null, "DemoProductForDuplication", "Demo Description", 123, 3);
+            var body = new Product(0, "DemoProductForDuplication", "Demo Description", 123, 3);
 
 
             //3. Perform POST Request
-            var response = await apiRequest.PostAsync("/Product/Create", new() { DataObject = body });
+            var response = await _playwrightAPIDriver.APIRequestContext.PostAsync("/Product/Create", new() { DataObject = body });
 
             //4. Convert the response to JSON
             var jsonResponse = await response.JsonAsync();
@@ -121,7 +105,7 @@ namespace PlaywrightTestDemo.APITesting
                 response.Status.Should().Be(200);
                 response.StatusText.Should().Be("OK");
 
-                product.Name.Should().Be("DemoProduct");
+                product.Name.Should().Be("DemoProductForDuplication");
                 product.description.Should().Be("Demo Description");
             }
         }
@@ -130,18 +114,6 @@ namespace PlaywrightTestDemo.APITesting
         [Fact]
         public async Task PerformPostProductsTestAsync()
         {
-            //1. First Create an instance of Playwright
-            var playwright = await Playwright.CreateAsync();
-
-            //2. Create instance of API Request
-            var apiRequestContext = new APIRequestNewContextOptions
-            {
-                BaseURL = "http://localhost:8001/"
-            };
-
-            var apiRequest = await playwright.APIRequest.NewContextAsync(apiRequestContext);
-
-
             var body = new List<Product>()
             {
                 new Product(0, "DemoProduct2", "Demo Description2", 456, 3),
@@ -150,7 +122,7 @@ namespace PlaywrightTestDemo.APITesting
             };
 
             //3. Perform POST Request
-            var response = await apiRequest.PostAsync("/Product/CreateProducts", new() { DataObject = body });
+            var response = await _playwrightAPIDriver.APIRequestContext.PostAsync("/Product/CreateProducts", new() { DataObject = body });
 
             //4. Convert the response to JSON
             var jsonResponse = await response.JsonAsync();
@@ -179,38 +151,31 @@ namespace PlaywrightTestDemo.APITesting
         [Fact]
         public async Task PerformDeleteProductsTestAsync()
         {
-            //1. First Create an instance of Playwright
-            var playwright = await Playwright.CreateAsync();
+            //1. Ensure that the product exist
+            var dbProduct = _productDbContext.Products.FirstOrDefault(x => x.Name == "DemoProduct3");
 
-            //2. Create instance of API Request
-            var apiRequestContext = new APIRequestNewContextOptions
+            if (dbProduct is not null)
             {
-                BaseURL = "http://localhost:8001/"
-            };
+                var response = await _playwrightAPIDriver.APIRequestContext.DeleteAsync($"/Product/Delete/?id={dbProduct.Id}");
 
-            var apiRequest = await playwright.APIRequest.NewContextAsync(apiRequestContext);
+                var jsonResponse = await response.JsonAsync();
 
-            var id = 22;
-            //3. Perform POST Request
-            var response = await apiRequest.DeleteAsync($"/Product/Delete/?id={id}");
+                var product = jsonResponse?.Deserialize<Product>(new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
-            var jsonResponse = await response.JsonAsync();
+                //Fluent Assertions
 
-            var product = jsonResponse?.Deserialize<Product>(new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+                using (new AssertionScope())
+                {
+                    response.Should().NotBeNull();
+                    response.Status.Should().Be(200);
+                    response.StatusText.Should().Be("OK");
 
-            //Fluent Assertions
-
-            using (new AssertionScope())
-            {
-                response.Should().NotBeNull();
-                response.Status.Should().Be(200);
-                response.StatusText.Should().Be("OK");
-
-                product.Name.Should().Be("DemoProduct");
-                product.description.Should().Be("Demo Description");
+                    product.Name.Should().Be("DemoProduct3");
+                    product.description.Should().Be("Demo Description3");
+                }
             }
         }
 

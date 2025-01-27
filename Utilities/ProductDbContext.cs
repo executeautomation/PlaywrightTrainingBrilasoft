@@ -11,7 +11,7 @@ namespace PlaywrightTestDemo.Utilities
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=E:\\EAApp_LocalMachine-6\\ProductAPI\\Product.db");
+            optionsBuilder.UseSqlite("Data Source=E:\\source\\EAAppBrila\\ProductAPI\\Product.db");
         }
     }
 }

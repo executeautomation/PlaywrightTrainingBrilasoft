@@ -30,6 +30,17 @@ namespace PlaywrightTestDemo.Pages
 
             return new HomePage(_page);
         }
-     
+
+        public async Task<HomePage> PerformLoginAsync(string userName, string password)
+        {
+            await _userName.FillAsync(userName);
+
+            await _password.FillAsync(password);
+
+            await _btnLogin.ClickAsync();
+
+            return new HomePage(_page);
+        }
+
     }
 }

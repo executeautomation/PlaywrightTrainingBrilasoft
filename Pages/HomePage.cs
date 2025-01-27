@@ -17,6 +17,9 @@ namespace PlaywrightTestDemo.Pages
 
         private ILocator _lnkEmployeeList => _page.GetByRole(AriaRole.Link, new() { Name = "Employee List" });
 
+        private ILocator _lnkLogOff => _page.GetByRole(AriaRole.Link, new() { Name = "Log off" });
+
+
         public async Task<LoginPage> ClickLoginLinkAsync()
         {
             await _lnkLogin.ClickAsync();
@@ -27,6 +30,17 @@ namespace PlaywrightTestDemo.Pages
         {
             await _lnkEmployeeList.ClickAsync();
             return new EmployeeList(_page);
+        }
+
+        public async Task<HomePage> ClickLogOff()
+        {
+            await _lnkLogOff.ClickAsync();
+            return new HomePage(_page);
+        }
+
+        public async Task<bool> IsLogoffLinkExist()
+        {
+            return await _lnkLogOff.IsVisibleAsync();
         }
     }
 }
