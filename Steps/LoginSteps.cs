@@ -11,19 +11,23 @@ namespace PlaywrightTestDemo.Steps
     public class LoginSteps
     {
         private readonly PlaywrightDriver _playwrightDriver;
+        private readonly ScenarioContext _scenarioContext;
         private IPage _page;
         private HomePage _homePage;
         private LoginPage _loginPage;
 
-        public LoginSteps(PlaywrightDriver playwrightDriver)
+        public LoginSteps(PlaywrightDriver playwrightDriver, ScenarioContext scenarioContext)
         {
             _playwrightDriver = playwrightDriver;
+            _scenarioContext = scenarioContext;
         }
 
         [Given("I navigate to the site")]
         public async Task GivenINavigateToTheSite()
         {
             _page = await _playwrightDriver.LaunchBrowserAsync();
+            //This code will save the Playwright's page instance in the scenario context dictionary 
+            _scenarioContext.Add("Page", _page);
         }
 
         [Given("I click login link")]
