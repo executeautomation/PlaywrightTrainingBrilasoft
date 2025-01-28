@@ -41,6 +41,8 @@ namespace PlaywrightTestDemo.Steps
         public async Task WhenIEnterLoginDetailsLikeUsernameAsAndPasswordAs(string userName, string password)
         {
             _homePage = await _loginPage.PerformLoginAsync(userName, password);
+
+            _scenarioContext.Add("UserName", userName);
         }
 
         [Then("I (.*) the log off link in the page")]

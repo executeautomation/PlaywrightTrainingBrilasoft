@@ -135,8 +135,8 @@ this.ScenarioInitialize(scenarioInfo);
                             "Name",
                             "Salary",
                             "Duration Worked",
-                            "Grades",
-                            "Emails"});
+                            "Grade",
+                            "Email"});
                 table1.AddRow(new string[] {
                             "DemoUser",
                             "1000",

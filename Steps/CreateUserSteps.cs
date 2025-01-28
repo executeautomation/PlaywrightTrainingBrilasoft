@@ -60,7 +60,7 @@ namespace PlaywrightTestDemo.Steps
         [When("I verify the user {string} is created")]
         public void WhenIVerifyTheUserIsCreated(string demoUser)
         {
-            
+            Console.WriteLine(_scenarioContext["UserName"]);
         }
 
     }
