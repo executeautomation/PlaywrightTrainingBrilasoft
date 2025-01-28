@@ -1,7 +1,7 @@
 ﻿Feature: Login
 	Perform login operations in the EA App
 
-	#BDD Scenario which can be understood by BA/Dev/QA and other stake holders
+#BDD Scenario which can be understood by BA/Dev/QA and other stake holders
 @smoke @regression @release-514
 Scenario: Login with correct details
 	Given I navigate to the site

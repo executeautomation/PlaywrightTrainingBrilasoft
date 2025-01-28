@@ -39,18 +39,14 @@ namespace PlaywrightTestDemo.Steps
             _homePage = await _loginPage.PerformLoginAsync(userName, password);
         }
 
-        [Then("I should see the log off link in the page")]
-        public async Task ThenIShouldSeeTheLogOffLinkInThePage()
+        [Then("I (.*) the log off link in the page")]
+        public async Task ThenIShouldSeeTheLogOffLinkInThePage(string condition)
         {
-            await _homePage.ClickLogOff();
+            if(condition.Equals("should see", StringComparison.OrdinalIgnoreCase))
+                await _homePage.ClickLogOff();
+            else
+                (await _homePage.IsLogoffLinkExist()).Should().NotBe(true);
         }
-
-        [Then("I should not see the log off link in the page")]
-        public async Task ThenIShouldNotSeeTheLogOffLinkInThePage()
-        {
-            (await _homePage.IsLogoffLinkExist()).Should().NotBe(true);
-        }
-
 
     }
 }
