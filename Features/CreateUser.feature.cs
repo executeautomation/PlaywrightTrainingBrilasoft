@@ -131,28 +131,22 @@ this.ScenarioInitialize(scenarioInfo);
 #line 10
  await testRunner.WhenAsync("I click the Create New Button", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-                global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table2 = new global::Reqnroll.Table(new string[] {
                             "Name",
                             "Salary",
                             "Duration Worked",
                             "Grade",
                             "Email"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "DemoUser",
                             "\"1000\"",
                             "8",
                             "Junior",
                             "demouser@gmail.com"});
-                table1.AddRow(new string[] {
-                            "DemoUser2",
-                            "\"20000\"",
-                            "10",
-                            "Junior",
-                            "demouser2@gmail.com"});
 #line 11
- await testRunner.AndAsync("I start creating user with following details", ((string)(null)), table1, "And ");
+ await testRunner.AndAsync("I start creating user with following details", ((string)(null)), table2, "And ");
 #line hidden
-#line 15
+#line 14
  await testRunner.AndAsync("I verify the user \"DemoUser\" is created", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }

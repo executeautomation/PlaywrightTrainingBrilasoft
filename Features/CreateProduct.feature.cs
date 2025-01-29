@@ -26,7 +26,7 @@ namespace PlaywrightTestDemo.Features
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "CreateProduct", "A short summary of the feature", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "CreateProduct", "\tCreate a Product", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
@@ -92,17 +92,21 @@ namespace PlaywrightTestDemo.Features
             await this.TestTearDownAsync();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="[scenario name]")]
+        [Xunit.SkippableFactAttribute(DisplayName="Create Product with all valid details")]
         [Xunit.TraitAttribute("FeatureTitle", "CreateProduct")]
-        [Xunit.TraitAttribute("Description", "[scenario name]")]
-        [Xunit.TraitAttribute("Category", "tag1")]
-        public async System.Threading.Tasks.Task ScenarioName()
+        [Xunit.TraitAttribute("Description", "Create Product with all valid details")]
+        [Xunit.TraitAttribute("Category", "smoke")]
+        [Xunit.TraitAttribute("Category", "regression")]
+        [Xunit.TraitAttribute("Category", "release-514")]
+        public async System.Threading.Tasks.Task CreateProductWithAllValidDetails()
         {
             string[] tagsOfScenario = new string[] {
-                    "tag1"};
+                    "smoke",
+                    "regression",
+                    "release-514"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("[scenario name]", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 6
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create Product with all valid details", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 5
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -112,14 +116,33 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 await this.ScenarioStartAsync();
+#line 6
+ await testRunner.GivenAsync("I navigate to the site", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
 #line 7
- await testRunner.GivenAsync("[context]", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+ await testRunner.AndAsync("I click Product link", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 8
- await testRunner.WhenAsync("[action]", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+ await testRunner.WhenAsync("I click Create link", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
+                global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
+                            "Name",
+                            "Description",
+                            "Price",
+                            "ProductType"});
+                table1.AddRow(new string[] {
+                            "Product_Umang",
+                            "Description_Umang",
+                            "72",
+                            "2"});
 #line 9
- await testRunner.ThenAsync("[outcome]", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.AndAsync("I enter the following data into the new product form", ((string)(null)), table1, "And ");
+#line hidden
+#line 12
+ await testRunner.ThenAsync("I should see \"Product_Umang\" in list", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 13
+ await testRunner.AndAsync("I also verify the backend of application", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

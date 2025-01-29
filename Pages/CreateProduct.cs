@@ -16,7 +16,7 @@ namespace PlaywrightTestDemo.Pages
         private ILocator _fieldPrice => _page.Locator("//input[@id='Price']");
         private ILocator _dropdownType => _page.Locator("//select[@id='ProductType']");
         private ILocator _btnCreate => _page.Locator("//input[@id='Create']");
-        private ILocator _productExist(string product) => _page.Locator($"//td[normalize-space(.)='{product}']");
+        private ILocator _productExist(string product) => _page.Locator($"//td[normalize-space(.)='{product}']").Nth(0);
 
 
         //Action methods

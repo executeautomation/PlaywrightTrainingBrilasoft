@@ -22,7 +22,7 @@ namespace PlaywrightTestDemo.Utilities
             var page = await browser.NewPageAsync();
 
             // Step 2: Navigate the URL
-            await page.GotoAsync("http://eaapp.somee.com/");
+            await page.GotoAsync("http://localhost:8000/");
 
             return page;
         }

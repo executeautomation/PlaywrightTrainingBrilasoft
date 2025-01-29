@@ -1,12 +1,10 @@
 ﻿using ExecuteAutomation.Reqnroll.Dynamics;
+using FluentAssertions;
 using Microsoft.Playwright;
 using PlaywrightTestDemo.Pages;
+using PlaywrightTestDemo.Utilities;
 using Reqnroll;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PlaywrightTestDemo.Steps
 {
@@ -14,17 +12,20 @@ namespace PlaywrightTestDemo.Steps
     public class CreateProductSteps
     {
         private readonly ScenarioContext _scenarioContext;
+        private readonly ProductDbContext _productDbContext;
         private CreateProduct _createProduct;
-        public CreateProductSteps(ScenarioContext scenarioContext)
+        public CreateProductSteps(ScenarioContext scenarioContext, ProductDbContext productDbContext)
         {
             _scenarioContext = scenarioContext;
+            _productDbContext = new ProductDbContext();
         }
         [Given("I click Product link")]
-        public async void GivenIClickProductLink()
+        public async Task GivenIClickProductLink()
         {
             var homePage = new HomePage((IPage)_scenarioContext["Page"]);
             _createProduct = await homePage.ClickProduct();
         }
+
 
         [When("I click Create link")]
         public async Task WhenIClickCreateLink()
@@ -33,17 +34,34 @@ namespace PlaywrightTestDemo.Steps
         }
 
         [When("I enter the following data into the new product form")]
-        public void WhenIEnterTheFollowingDataIntoTheNewProductForm(DataTable dataTable)
+        public async Task WhenIEnterTheFollowingDataIntoTheNewProductForm(DataTable dataTable)
         {
-            var data = dataTable.CreateDynamicInstance();
+            dynamic data = dataTable.CreateDynamicInstance();
 
+            var product = new Product(0, (string)data.Name, (string)data.Description, (int)data.Price, (int)data.ProductType);
+
+            await _createProduct.CreateNewProduct(product);
+
+            _scenarioContext.Add("ProductName", (string)data.Name);
         }
 
         [Then("I should see {string} in list")]
-        public void ThenIShouldSeeInList(string p0)
+        public async Task ThenIShouldSeeInList(string productName)
         {
-            throw new PendingStepException();
+            await _createProduct.DoesProductExist(productName);
         }
+
+        [Then("I also verify the backend of application")]
+        public void ThenIAlsoVerifyTheBackendOfApplication()
+        {
+            var productName = (string)_scenarioContext["ProductName"];
+
+            var product = _productDbContext.Products.FirstOrDefault(x => x.Name == productName);
+
+            product.Should().NotBeNull();
+            product.Name.Should().BeEquivalentTo(productName);
+        }
+
 
     }
 }
