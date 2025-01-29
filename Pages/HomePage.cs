@@ -19,6 +19,9 @@ namespace PlaywrightTestDemo.Pages
 
         private ILocator _lnkLogOff => _page.GetByRole(AriaRole.Link, new() { Name = "Log off" });
 
+        private ILocator _lnkProduct => _page.GetByRole(AriaRole.Link, new() { Name = "Product off" });
+
+
 
         public async Task<LoginPage> ClickLoginLinkAsync()
         {
@@ -41,6 +44,12 @@ namespace PlaywrightTestDemo.Pages
         public async Task<bool> IsLogoffLinkExist()
         {
             return await _lnkLogOff.IsVisibleAsync();
+        }
+
+        public async Task<CreateProduct> ClickProduct()
+        {
+            await _lnkProduct.ClickAsync();
+            return new CreateProduct(_page);
         }
     }
 }
