@@ -1,11 +1,7 @@
-﻿using Microsoft.Playwright;
+﻿using ExecuteAutomation.Reqnroll.Dynamics;
+using Microsoft.Playwright;
 using PlaywrightTestDemo.Pages;
 using Reqnroll;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PlaywrightTestDemo.Steps
 {
@@ -39,6 +35,8 @@ namespace PlaywrightTestDemo.Steps
         public async Task WhenIStartCreatingUserWithFollowingDetails(DataTable dataTable)
         {
             ////Tables
+            ///
+            //Way 1
             //foreach (var row in dataTable.Rows)
             //{
             //    var name = row["Name"];
@@ -52,9 +50,27 @@ namespace PlaywrightTestDemo.Steps
             //    await _createUser.CreateUserAysnc(userData);
             //}
 
+            //Way 2: With Type of UserData
+            //var userData = dataTable.CreateInstance<UserData>();
+            //await _createUser.CreateUserAysnc(userData);
 
-            var userData = dataTable.CreateInstance<UserData>();
+
+
+            //Way 3 - With Dynamic types
+            dynamic data = dataTable.CreateDynamicInstance();
+            var userData = new UserData((string)data.Name, "10000", (int)data.DurationWorked, (string)data.Grade, (string)data.Email);
             await _createUser.CreateUserAysnc(userData);
+
+
+            //With Iteration for multiple Rows
+            //dynamic datas = dataTable.CreateDynamicSet();
+
+            //foreach (dynamic data in datas)
+            //{
+            //    var userData = new UserData((string)data.Name, "10000", (int)data.DurationWorked, (string)data.Grade, (string)data.Email);
+            //    await _createUser.CreateUserAysnc(userData);
+            //}
+
         }
 
         [When("I verify the user {string} is created")]

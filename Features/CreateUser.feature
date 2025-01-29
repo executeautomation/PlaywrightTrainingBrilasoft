@@ -9,6 +9,6 @@ Scenario: Create User with valid information
 	And I click the Employee list link
 	When I click the Create New Button
 	And I start creating user with following details
-		| Name     | Salary | Duration Worked | Grade  | Email              |
-		| DemoUser | 1000   | 8               | Junior | demouser@gmail.com |
+		| Name      | Salary  | Duration Worked | Grade  | Email               |
+		| DemoUser  | "1000"  | 8               | Junior | demouser@gmail.com  |
 	And I verify the user "DemoUser" is created

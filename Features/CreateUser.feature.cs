@@ -139,14 +139,20 @@ this.ScenarioInitialize(scenarioInfo);
                             "Email"});
                 table1.AddRow(new string[] {
                             "DemoUser",
-                            "1000",
+                            "\"1000\"",
                             "8",
                             "Junior",
                             "demouser@gmail.com"});
+                table1.AddRow(new string[] {
+                            "DemoUser2",
+                            "\"20000\"",
+                            "10",
+                            "Junior",
+                            "demouser2@gmail.com"});
 #line 11
  await testRunner.AndAsync("I start creating user with following details", ((string)(null)), table1, "And ");
 #line hidden
-#line 14
+#line 15
  await testRunner.AndAsync("I verify the user \"DemoUser\" is created", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
