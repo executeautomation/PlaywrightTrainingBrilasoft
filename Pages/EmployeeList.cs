@@ -9,7 +9,7 @@ namespace PlaywrightTestDemo.Pages
 
         public EmployeeList(IPage page) => _page = page;
 
-        private ILocator _btnCreate => _page.GetByRole(AriaRole.Link, new() { Name = "Create New" });
+        private ILocator _btnCreate => _page.GetByRole(AriaRole.Link, new() { Name = "Create Newss" });
 
         public async Task<CreateUser> ClickCreateNewAsync()
         {

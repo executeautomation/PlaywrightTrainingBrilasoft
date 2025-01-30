@@ -37,19 +37,42 @@ namespace PlaywrightTestDemo.ReusableSteps
         [AfterStep]
         public void AfterStep()
         {
-            switch(_scenarioContext.StepContext.StepInfo.StepDefinitionType)
+
+            if (_scenarioContext.TestError == null)
             {
-                case Reqnroll.Bindings.StepDefinitionType.Given:
-                    _scenario.CreateNode<Given>(_scenarioContext.StepContext.StepInfo.Text);
-                    break;
-                case Reqnroll.Bindings.StepDefinitionType.When:
-                    _scenario.CreateNode<When>(_scenarioContext.StepContext.StepInfo.Text);
-                    break;
-                case Reqnroll.Bindings.StepDefinitionType.Then:
-                    _scenario.CreateNode<Then>(_scenarioContext.StepContext.StepInfo.Text);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (_scenarioContext.StepContext.StepInfo.StepDefinitionType)
+                {
+                    case Reqnroll.Bindings.StepDefinitionType.Given:
+                        _scenario.CreateNode<Given>(_scenarioContext.StepContext.StepInfo.Text);
+                        break;
+                    case Reqnroll.Bindings.StepDefinitionType.When:
+                        _scenario.CreateNode<When>(_scenarioContext.StepContext.StepInfo.Text);
+                        break;
+                    case Reqnroll.Bindings.StepDefinitionType.Then:
+                        _scenario.CreateNode<Then>(_scenarioContext.StepContext.StepInfo.Text);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            } else
+            {
+                switch (_scenarioContext.StepContext.StepInfo.StepDefinitionType)
+                {
+                    case Reqnroll.Bindings.StepDefinitionType.Given:
+                        _scenario.CreateNode<Given>(_scenarioContext.StepContext.StepInfo.Text)
+                            .Fail(_scenarioContext.TestError.Message);
+                        break;
+                    case Reqnroll.Bindings.StepDefinitionType.When:
+                        _scenario.CreateNode<When>(_scenarioContext.StepContext.StepInfo.Text)
+                         .Fail(_scenarioContext.TestError.Message);
+                        break;
+                    case Reqnroll.Bindings.StepDefinitionType.Then:
+                        _scenario.CreateNode<Then>(_scenarioContext.StepContext.StepInfo.Text)
+                         .Fail(_scenarioContext.TestError.Message);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             
         }
