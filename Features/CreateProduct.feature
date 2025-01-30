@@ -1,12 +1,6 @@
 ﻿Feature: CreateProduct
 	Create a Product
 
-Background: 
-	Given I clean up the application products before execution
-		| ProductName     |
-		| Product_Umang   |
-		| Product_Ranjtha |
-
 @smoke @regression @release-514
 Scenario: Create Product with all valid details
 	Given I navigate to the site
