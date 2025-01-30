@@ -20,7 +20,7 @@ namespace PlaywrightTestDemo.Pages
 
 
         //Action methods
-        public async Task CreateUserAysnc(UserData userData)
+        public async Task<bool> CreateUserAysnc(UserData userData)
         {
 
             await _name.ClearAndFillAsync(userData.Name);
@@ -34,6 +34,8 @@ namespace PlaywrightTestDemo.Pages
             await _mail.ClearAndFillAsync(userData.Email);
 
             await _create.ClickAsync();
+
+            return true;
         }
     }
 }

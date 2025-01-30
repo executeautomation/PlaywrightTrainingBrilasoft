@@ -2,19 +2,22 @@ using AutoFixture.Xunit2;
 using Microsoft.Playwright;
 using PlaywrightTestDemo.Pages;
 using PlaywrightTestDemo.Utilities;
-using Xunit.Abstractions;
 
 
 namespace PlaywrightTestDemo
 {
-    public class TestWithPOM : IClassFixture<PlaywrightDriver>
+    public class TestWithPOM :
+        IClassFixture<PlaywrightDriver>,
+        IClassFixture<ExtentReportHelper>
     {
 
         private readonly PlaywrightDriver _driver;
+        private readonly ExtentReportHelper _extentReportHelper;
         private IPage page;
-        public TestWithPOM(PlaywrightDriver driver)
+        public TestWithPOM(PlaywrightDriver driver, ExtentReportHelper extentReportHelper)
         {
             _driver = driver;
+            _extentReportHelper = extentReportHelper;
             page = _driver.LaunchBrowserAsync().Result;
         }
 
@@ -38,20 +41,33 @@ namespace PlaywrightTestDemo
         [MemberData(nameof(TestData))]
         public async Task WorkingWithLocator(UserData userData)
         {
+
+            var testReport = _extentReportHelper.ExtentReports
+                                .CreateTest($"WorkingWithLocators:{userData.Name}");
             //HomePage
             HomePage homePage = new HomePage(page);
             var loginPage = await homePage.ClickLoginLinkAsync();
+            testReport
+                .Log(AventStack.ExtentReports.Status.Pass, "Click Login Link");
 
             //2. Perform Login
             await loginPage.PerformLoginAsync();
+            testReport.Log(AventStack.ExtentReports.Status.Pass, "Perform Login Operation");
 
             //3. Employee List
             var employeeListPage = await homePage.ClickEmployeeListLinkAsync();
-            
+            testReport.Log(AventStack.ExtentReports.Status.Pass, "Employee List Clicked");
+
             //4. Click Create new button
             var createUser = await employeeListPage.ClickCreateNewAsync();
+            testReport.Log(AventStack.ExtentReports.Status.Pass, "Create New Button Clicked");
 
-            await createUser.CreateUserAysnc(userData);
+            var isUserCreated = await createUser.CreateUserAysnc(userData);
+
+            if (isUserCreated)
+                testReport.Log(AventStack.ExtentReports.Status.Pass, "User Created");
+            else
+                testReport.Log(AventStack.ExtentReports.Status.Fail, "User is not Created");
 
         }
 
