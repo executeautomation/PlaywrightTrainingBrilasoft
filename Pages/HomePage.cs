@@ -15,7 +15,7 @@ namespace PlaywrightTestDemo.Pages
 
         private ILocator _lnkLogin => _page.GetByRole(AriaRole.Link, new() { Name = "Login" });
 
-        private ILocator _lnkEmployeeList => _page.GetByRole(AriaRole.Link, new() { Name = "Employee List" });
+        private ILocator _lnkEmployeeList => _page.GetByRole(AriaRole.Link, new() { Name = "Employee Listsss" });
 
         private ILocator _lnkLogOff => _page.GetByRole(AriaRole.Link, new() { Name = "Log off" });
 

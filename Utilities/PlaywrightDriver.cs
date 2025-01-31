@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using System.Reflection;
 
 namespace PlaywrightTestDemo.Utilities
 {
@@ -6,6 +7,8 @@ namespace PlaywrightTestDemo.Utilities
     {
 
         private IPlaywright _playwright;
+
+        private IPage _page;
 
         public async Task<IPage> LaunchBrowserAsync()
         {
@@ -19,12 +22,25 @@ namespace PlaywrightTestDemo.Utilities
             };
 
             var browser = await _playwright.Chromium.LaunchAsync(browserLaunchOption);
-            var page = await browser.NewPageAsync();
+            _page = await browser.NewPageAsync();
 
             // Step 2: Navigate the URL
-            await page.GotoAsync("http://eaapp.somee.com");
+            await _page.GotoAsync("http://eaapp.somee.com");
 
-            return page;
+            return _page;
+        }
+
+
+        public async Task<string> TakeScreenshotAsPathAsync(string fileName)
+        {
+            var path = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}//{fileName}.png";
+
+            await _page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Path = path,
+            });
+
+            return path;
         }
 
 

@@ -20,6 +20,8 @@ namespace PlaywrightTestDemo.Steps
         {
             _playwrightDriver = playwrightDriver;
             _scenarioContext = scenarioContext;
+            //Store the playwright driver, which can be used in the hooks later on
+            scenarioContext.Add("PlaywrightDriver", _playwrightDriver);
         }
 
         [Given("I navigate to the site")]
