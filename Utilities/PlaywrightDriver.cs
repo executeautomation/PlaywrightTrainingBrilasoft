@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using PlaywrightTestDemo.Config;
 using System.Reflection;
 
 namespace PlaywrightTestDemo.Utilities
@@ -10,6 +11,13 @@ namespace PlaywrightTestDemo.Utilities
 
         private IPage _page;
 
+        private PlaywrightConfigSettings _playwrightConfigSettings;
+
+        public PlaywrightDriver()
+        {
+            _playwrightConfigSettings = ConfigReader.ReadConfig();
+        }
+
         public async Task<IPage> LaunchBrowserAsync()
         {
             // Step 1: Launch the browser
@@ -17,15 +25,15 @@ namespace PlaywrightTestDemo.Utilities
 
             var browserLaunchOption = new BrowserTypeLaunchOptions
             {
-                Headless = false,
-                SlowMo = 50
+                Headless = _playwrightConfigSettings.Headless,
+                SlowMo = _playwrightConfigSettings.SlowMo
             };
 
             var browser = await _playwright.Chromium.LaunchAsync(browserLaunchOption);
             _page = await browser.NewPageAsync();
 
             // Step 2: Navigate the URL
-            await _page.GotoAsync("http://eaapp.somee.com");
+            await _page.GotoAsync(_playwrightConfigSettings.ApplicationUrl);
 
             return _page;
         }

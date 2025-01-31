@@ -1,0 +1,6 @@
+﻿{
+  "ApplicationUrl": "http://eaapp.somee.com",
+  "ApplicationApiUrl": "http://localhost:8001/",
+  "Headless": true,
+  "SlowMo":  50
+}

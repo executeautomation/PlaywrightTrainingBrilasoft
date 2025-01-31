@@ -15,25 +15,31 @@ namespace PlaywrightTestDemo.ReusableSteps
         private static ExtentReports _extentReports;
         private readonly FeatureContext _featureContext;
         private readonly ScenarioContext _scenarioContext;
-        private ExtentTest _scenario;
+        private static ExtentTest _scenario;
+        private static ExtentTest _feature;
 
         public Hooks(
-            ExtentReportHelper extentReportHelper, 
-            FeatureContext featureContext, 
+            ExtentReportHelper extentReportHelper,
+            FeatureContext featureContext,
             ScenarioContext scenarioContext)
         {
-            _extentReportHelper = new ExtentReportHelper();
-            _extentReports = _extentReportHelper.ExtentReports;
             _featureContext = featureContext;
             _scenarioContext = scenarioContext;
         }
 
+        [BeforeTestRun]
+        public static void InitializeExtentReport()
+        {
+            var extentReportHelper = new ExtentReportHelper();
+            _extentReports = extentReportHelper.ExtentReports;
+        }
+
+
         [BeforeScenario]
         public void BeforeScenario()
         {
-            var feature = _extentReports.CreateTest<Feature>(_featureContext.FeatureInfo.Title);
-            _scenario = feature.CreateNode<Scenario>(_scenarioContext.ScenarioInfo.Title);
-
+            _feature = _extentReports.CreateTest<Feature>(_featureContext.FeatureInfo.Title);
+            _scenario = _feature.CreateNode<Scenario>(_scenarioContext.ScenarioInfo.Title);
         }
 
         [AfterStep]
@@ -57,7 +63,8 @@ namespace PlaywrightTestDemo.ReusableSteps
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            } else
+            }
+            else
             {
                 switch (_scenarioContext.StepContext.StepInfo.StepDefinitionType)
                 {
@@ -92,7 +99,7 @@ namespace PlaywrightTestDemo.ReusableSteps
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            
+
         }
 
 
